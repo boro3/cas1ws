@@ -22,15 +22,6 @@ const fileRead = (fileName) => {
     });
 };
 
-const readAllFilesFromListAndStats = async (array) => {
-    for (let file of array) {
-        let text = await fileRead(file);
-        let stats=await statForFile(file);
-        console.log(stats);
-        console.log("\n"+text);
-    }
-};
-
 const statForFile=(fileName)=>{
     return new Promise((success,fail)=>{
         fs.stat(`./test/${fileName}`,(err,stats)=>{
@@ -40,6 +31,15 @@ const statForFile=(fileName)=>{
             return success(stats);
         });
     });
+};
+
+const readAllFilesFromListAndStats = async (array) => {
+    for (let file of array) {
+        let text = await fileRead(file);
+        let stats=await statForFile(file);
+        console.log(stats);
+        console.log("\n"+text);
+    }
 };
 
 const wrapperReadDir = async (dir) => {
