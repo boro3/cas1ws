@@ -11,9 +11,31 @@ const readDirectory = (dir) => {
     });
 };
 
-const fileRead = (fileName) => {
+const statForFile = (fileName, dir) => {
     return new Promise((success, fail) => {
-        fs.readFile(`./test/${fileName}`, 'utf8', (err, data) => {
+        fs.stat(`./${dir}/${fileName}`, (err, stats) => {
+            if (err) {
+                return fail(err);
+            }
+            return success(stats);
+        });
+    });
+};
+
+const fileCopy = (fileToCopy, newName) => {
+    return new Promise((succes, fail) => {
+        fs.copyFile(fileToCopy, newName, err => {
+            if (err) {
+                return fail(err);
+            }
+            return succes();
+        });
+    });
+};
+
+const fileRead = (fileName, dir) => {
+    return new Promise((success, fail) => {
+        fs.readFile(`./${dir}/${fileName}`, 'utf8', (err, data) => {
             if (err) {
                 return fail(err);
             }
@@ -22,39 +44,28 @@ const fileRead = (fileName) => {
     });
 };
 
-const statForFile=(fileName)=>{
-    return new Promise((success,fail)=>{
-        fs.stat(`./test/${fileName}`,(err,stats)=>{
-            if(err){
-                return fail(err);
-            }
-            return success(stats);
-        });
-    });
-};
-
-const readAllFilesFromListAndStats = async (array) => {
+const readAllFilesFromListAndStats = async (array, dir) => {
     for (let file of array) {
-        let text = await fileRead(file);
-        let stats=await statForFile(file);
+        let text = await fileRead(file, dir);
+        let stats = await statForFile(file, dir);
         console.log(stats);
-        console.log("\n"+text);
+        console.log("\n" + text);
     }
 };
 
 const wrapperReadDir = async (dir) => {
-    let i=0;
     try {
-        let files = await readDirectory(dir)
+        await fileCopy('./test/data1.txt', './test/copy.txt')
+        let files = await readDirectory(dir);
         console.log(`Files in ${dir} directory \n`);
-        files.forEach(fileName=>{
+        files.forEach((fileName, i) => {
             console.log(`${i}. ${fileName}`);
-            i++;
-        })
-        console.log("\nContent of The Files and Stats")
-        readAllFilesFromListAndStats(files);
+        });
+        console.log("\nContent of The Files and Stats");
+        readAllFilesFromListAndStats(files, dir);
     } catch (err) {
         console.log(err);
     }
 };
+
 wrapperReadDir('test');
