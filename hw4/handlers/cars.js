@@ -75,7 +75,6 @@ const remove = async (req, res) => {
 const getByManufacturer = async (req, res) => {
     try {
         let data = await carsModel.getByManufacturer(req.params.name);
-        console.log(req.params.name)
         return res.status(200).send(data);
     } catch (err) {
         console.log(err);

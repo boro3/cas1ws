@@ -1,1 +1,17 @@
-[{"book_name":"Devojkite na Marko","author_name":"Olivera Nikolova","id":1},{"id":3,"manufacturer":"Toyota","model":"Rav-4"},{"id":4,"book_name":"Devojkite na Marko","author_name":"Olivera Nikolova"}]
+[
+    {
+        "id": 1,
+        "manufacturer": "toyota",
+        "model": "corrola"
+    },
+    {
+        "id": 3,
+        "manufacturer": "toyota",
+        "model": "rav4"
+    },
+    {
+        "id": 4,
+        "manufacturer": "volkswagen",
+        "model": "passat"
+    }
+]
