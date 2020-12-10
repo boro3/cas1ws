@@ -3,7 +3,6 @@ const carsModel = require('../pkg/cars/cars_mongo');
 const getAll = async (req, res) => {
     try {
         let data = await carsModel.getAll();
-        console.log(data)
         return res.status(200).send(data);
     } catch(err) {
         console.log(err);

@@ -3,7 +3,6 @@ const usersModel = require('../pkg/users/users_mongo');
 const getAll = async (req, res) => {
     try {
         let data = await usersModel.getAll();
-        console.log(data)
         return res.status(200).send(data);
     } catch(err) {
         console.log(err);
