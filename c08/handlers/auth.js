@@ -74,8 +74,17 @@ const login = async (req, res) => {
     //
 };
 const refreshToken = (req, res) => {
-    console.log(req.user);
-    res.status(200).send('ok');
+    let payload = {
+        uid: req.user._id,
+        role: req.user.role,
+        first_name: ru.first_name,
+        last_name: req.user.last_name,
+        email: req.user.email,
+        exp: (new Date().getTime() + (365 * 24 * 60 * 60 * 1000)) / 1000
+    };
+    let key = cfg.get('server').jwt_key;
+    let token = jwt.sign(payload, key);
+    res.status(200).send({ jwt: token });
 };
 const forgotPassword = (req, res) => {
     res.status(200).send('ok');
