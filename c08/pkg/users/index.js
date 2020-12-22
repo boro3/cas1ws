@@ -4,13 +4,26 @@ const User = mongoose.model(
     'users',
     {
         first_name: String,
-        last_name: String
+        last_name: String,
+        email: String,
+        password: String,
+        dob: Date,
+        active: Boolean,
+        reset_hash: String,
+        role: String,
+        _created: Date,
+        _deleted: Boolean
     },
     'users'
 );
 
 const getAll = async () => {
     let data = await User.find({});
+    return data;
+};
+
+const getOneByEmail = async (email) => {
+    let data = await User.findOne({ email: email });
     return data;
 };
 
@@ -36,13 +49,14 @@ const updatePartial = async (id, userData) => {
 };
 
 const remove = async (id) => {
-    let data = await User.deleteOne({ _id: id });
+    let data = await User.updateOne({ _id: id }, {_deleted: true});
     return data.deletedCount !== 0;
 };
 
 module.exports = {
     getAll,
     getOne,
+    getOneByEmail,
     save,
     update,
     updatePartial,

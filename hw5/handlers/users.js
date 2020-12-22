@@ -1,10 +1,11 @@
 const usersModel = require('../pkg/users/users_mongo');
+const usersValidator = require('../pkg/users/validator');
 
 const getAll = async (req, res) => {
     try {
         let data = await usersModel.getAll();
         return res.status(200).send(data);
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         return res.status(500).send('Internal Server Error');
     }
@@ -13,7 +14,7 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
     try {
         let data = await usersModel.getOne(req.params.id);
-        if(data) {
+        if (data) {
             return res.status(200).send(data);
         }
         return res.status(404).send('Not Found');
@@ -25,6 +26,12 @@ const getOne = async (req, res) => {
 
 const save = async (req, res) => {
     try {
+        await usersValidator.validate(req.body, usersValidator.userSchema);
+    } catch (e) {
+        console.log(e);
+        return res.status(400).send('Bad Content');
+    }
+    try {
         let u = await usersModel.save(req.body);
         return res.status(201).send(u);
     } catch (err) {
@@ -35,8 +42,14 @@ const save = async (req, res) => {
 
 const update = async (req, res) => {
     try {
+        await usersValidator.validate(req.body, usersValidator.userSchema);
+    } catch (e) {
+        console.log(e);
+        return res.status(400).send('Bad Content');
+    }
+    try {
         let c = await usersModel.update(req.params.id, req.body);
-        if(c) {
+        if (c) {
             return res.status(204).send('No Content');
         }
         return res.status(404).send('Not Found');
@@ -48,8 +61,14 @@ const update = async (req, res) => {
 
 const updatePartial = async (req, res) => {
     try {
+        await usersValidator.validate(req.body, usersValidator.userPartialUpdateSchema);
+    } catch (e) {
+        console.log(e);
+        return res.status(400).send('Bad Content');
+    }
+    try {
         let c = await usersModel.updatePartial(req.params.id, req.body);
-        if(c) {
+        if (c) {
             return res.status(204).send('No Content');
         }
         return res.status(404).send('Not Found');
@@ -62,7 +81,7 @@ const updatePartial = async (req, res) => {
 const remove = async (req, res) => {
     try {
         let c = await usersModel.remove(req.params.id);
-        if(c) {
+        if (c) {
             return res.status(204).send('No Content');
         }
         return res.status(404).send('Not Found');

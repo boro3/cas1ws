@@ -1,0 +1,12 @@
+{
+    "server": {
+        "port": 8080,
+        "jwt_key": "TaJn4"
+    },
+    "db": {
+        "username": "borce_ss",
+        "password": "boro!759",
+        "host": "cluster0.vw2pn.mongodb.net",
+        "dbname": "users"
+    }
+}

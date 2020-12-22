@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const cft = require ('../config')
 
-let username = 'borce_ss';
-let password = 'boro!759';
-let dbname = 'users';
-let host = "cluster0.vw2pn.mongodb.net"
+let username = cft.get('db').username;
+let password = cft.get('db').password;
+let dbname = cft.get('db').dbname;
+let host = cft.get('db').host;
 
 let dsn = `mongodb+srv://${username}:${password}@${host}/${dbname}?retryWrites=true&w=majority`;
 

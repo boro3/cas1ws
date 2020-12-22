@@ -1,10 +1,11 @@
 const booksModel = require('../pkg/books/books_mongo');
+const booksValidator = require('../pkg/books/validator');
 
 const getAll = async (req, res) => {
     try {
         let data = await booksModel.getAll();
         return res.status(200).send(data);
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         return res.status(500).send('Internal Server Error');
     }
@@ -13,7 +14,7 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
     try {
         let data = await booksModel.getOne(req.params.id);
-        if(data) {
+        if (data) {
             return res.status(200).send(data);
         }
         return res.status(404).send('Not Found');
@@ -25,6 +26,11 @@ const getOne = async (req, res) => {
 
 const save = async (req, res) => {
     try {
+        await booksValidator.validate(req.body, booksValidator.bookSchema);
+    } catch (e) {
+        return res.status(400).send('Bad Content');
+    }
+    try {
         let u = await booksModel.save(req.body);
         return res.status(201).send(u);
     } catch (err) {
@@ -35,8 +41,14 @@ const save = async (req, res) => {
 
 const update = async (req, res) => {
     try {
+        await booksValidator.validate(req.body, booksValidator.bookSchema);
+    } catch (e) {
+        console.log(e);
+        return res.status(400).send('Bad Content');
+    }
+    try {
         let c = await booksModel.update(req.params.id, req.body);
-        if(c) {
+        if (c) {
             return res.status(204).send('No Content');
         }
         return res.status(404).send('Not Found');
@@ -48,8 +60,14 @@ const update = async (req, res) => {
 
 const updatePartial = async (req, res) => {
     try {
+        await booksValidator.validate(req.body, booksValidator.bookPartialUpdateSchema);
+    } catch (e) {
+        console.log(e);
+        return res.status(400).send('Bad Content');
+    }
+    try {
         let c = await booksModel.updatePartial(req.params.id, req.body);
-        if(c) {
+        if (c) {
             return res.status(204).send('No Content');
         }
         return res.status(404).send('Not Found');
@@ -62,7 +80,7 @@ const updatePartial = async (req, res) => {
 const remove = async (req, res) => {
     try {
         let c = await booksModel.remove(req.params.id);
-        if(c) {
+        if (c) {
             return res.status(204).send('No Content');
         }
         return res.status(404).send('Not Found');

@@ -1,8 +1,22 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const cft = require ('../config')
+let username = cft.get('db').username;
+let password = cft.get('db').password;
+let dbname = cft.get('db').dbname;
+let host = cft.get('db').host;
 
-const dns = 'mongodb+srv://borce_ss:boro!759780@cluster0.vw2pn.mongodb.net/users?retryWrites=true&w=majority'
+let dsn = `mongodb+srv://${username}:${password}@${host}/${dbname}?retryWrites=true&w=majority`;
 
-mongoose.connect(dns,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-)
-
+mongoose.connect(
+    dsn,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    },
+    err => {
+        if (err) {
+            return console.log('Could not connect to database: ', err);
+        }
+        console.log('Successfully conneted to database');
+    }
+);

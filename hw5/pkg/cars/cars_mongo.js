@@ -11,58 +11,34 @@ const Car = mongoose.model(
 );
 
 const getAll = async () => {
-    try {
-        let data = await Car.find({});
-        return data;
-    } catch(err) {
-        console.log(err);
-    }
+    let data = await Car.find({});
+    return data;
 };
 
 const getOne = async (id) => {
-    try {
-        let data = await Car.findOne({_id: id});
-        return data;
-    } catch (err) {
-        console.log(err);
-    }
+    let data = await Car.findOne({ _id: id });
+    return data;
 };
 
 const save = async (carData) => {
-    try {
-        let c = new Car(carData);
-        let data = await c.save();
-        return data;
-    } catch(err) {
-        console.log(err);
-    }
+    let c = new Car(carData);
+    let data = await c.save();
+    return data;
 };
 
 const update = async (id, carData) => {
-    try {
-        let data = await Car.updateOne({_id: id}, carData);
-        return data.nModified !== 0;
-    } catch(err) {
-        console.log(err);
-    }
+    let data = await Car.updateOne({ _id: id }, carData);
+    return data.nModified !== 0;
 };
 
 const updatePartial = async (id, carData) => {
-    try {
-        let data = await Car.updateOne({ _id: id }, carData);
-        return data.nModified !== 0;
-    } catch (err) {
-        console.log(err);
-    }
+    let data = await Car.updateOne({ _id: id }, carData);
+    return data.nModified !== 0;
 };
 
 const remove = async (id) => {
-    try {
-        let data = await Car.deleteOne({ _id: id });
-        return data.deletedCount !== 0;
-    } catch (err) {
-        console.log(err);
-    }
+    let data = await Car.deleteOne({ _id: id });
+    return data.deletedCount !== 0;
 };
 
 module.exports = {
