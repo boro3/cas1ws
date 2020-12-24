@@ -4,8 +4,8 @@
         "jwt_key": "TaJn4"
     },
     "db": {
-        "username": "borce_ss",
-        "password": "boro!759",
+        "username": "",
+        "password": "",
         "host": "cluster0.vw2pn.mongodb.net",
         "dbname": "users"
     }
