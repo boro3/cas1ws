@@ -1,7 +1,8 @@
 require('./pkg/db');
 const cfg = require('./pkg/config');
 const auth = require('./handlers/auth');
-const movies = require('./handlers/movies')
+const movies = require('./handlers/movies');
+const songs = require ('./handlers/songs');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -54,6 +55,33 @@ api.post('/api/v1/movies', movies.save);
 
 //movies get all
 api.get('/api/v1/movies', movies.getAll);
+
+
+api.post('/api/v1/songs', songs.save);
+
+api.get('/api/v1/songs', songs.getAll);
+
+api.get('/api/v1/songs/my', songs.getUsersAll);
+
+api.get('/api/v1/songs/:id', songs.getOne);
+
+api.patch('/api/v1/songs/:id', songs.update);
+
+api.delete('/api/v1/songs/:id', songs.remove);
+
+api.post('/api/v1/games', songs.save);
+
+api.get('/api/v1/games', songs.getAll);
+
+api.get('/api/v1/games/my', songs.getUsersAll);
+
+api.get('/api/v1/games/:id', songs.getOne);
+
+api.patch('/api/v1/games/:id', songs.update);
+
+api.delete('/api/v1/games/:id', songs.remove);
+
+
 
 
 
