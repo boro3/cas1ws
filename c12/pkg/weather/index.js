@@ -14,7 +14,18 @@ const cityMaps = {
     'ge': 'gevgelija'
 };
 
+const cityMapsCord = {
+    'sk': { lat: 42, lon: 21.4333 },
+    'bt': { lat: 41.0311, lon: 21.3403 },
+    'oh': { lat: 41.1172, lon: 20.8019 },
+    'te': { lat: 42.0106, lon: 20.9714 },
+    'ku': { lat: 42.1322, lon: 21.7144 },
+    'gv': { lat: 41.7972, lon: 20.9083 },
+    'ge': { lat: 41.1392, lon: 22.5025 }
+};
+
 let cache = {};
+let sevenDayCache = {};
 
 const getCityWeather = async (city) => {
     city = cityMaps[city.toLowerCase()];
@@ -39,11 +50,42 @@ const getCityWeather = async (city) => {
     }
 };
 
-const getAverageWeather= async (city) =>{
+const getAverageTemperatures = (array) => {
+    let result = {};
+    let maxAvg = 0, minAvg = 0;
+    for (let day in array) {
+        maxAvg = maxAvg + array[day].temp.max;
+        minAvg = minAvg + array[day].temp.min;
+    }
+    result.maxAvg = maxAvg / 7;
+    result.minAvg = minAvg / 7;
+    return result;
+};
+
+const getAverageWeather = async (city) => {
+    let cords = cityMapsCord[city.toLowerCase()];
     city = cityMaps[city.toLowerCase()];
-    let url = `https://api.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=16&units=${UNITS}&appid=${API_KEY}`
+    if (sevenDayCache[city] && (new Date().getTime()) - sevenDayCache[city].timestamp < 60 * 1000) {
+        let avg = getAverageTemperatures(sevenDayCache[city].data.daily);
+        return avg;
+    }
+    let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${cords.lat}&lon=${cords.lon}&units=metric&exclude=hourly,minutely,current,alerts&appid=${API_KEY}`
+    try {
+        let data = await fetch(url);
+        data = await data.json();
+
+        sevenDayCache[city] = {
+            timestamp: new Date().getTime(),
+            data
+        };
+        let avg = getAverageTemperatures(data.daily);
+        return avg;
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 module.exports = {
-    getCityWeather
+    getCityWeather,
+    getAverageWeather
 }
