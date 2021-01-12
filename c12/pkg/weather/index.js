@@ -105,10 +105,9 @@ const getAverageWeatherSixteenDays = async (city) => {
             sixteenDayAvgTemp: getAverageSixteenTemperatures(data.data),
             city_name:data.city_name ,
             lon:data.lon ,
-            timezone:data.timezone ,
             lat:data.lat ,
-            country_code:data.country_code ,
-            state_code:data.state_code
+            timezone:data.timezone ,            
+            country_code:data.country_code
         }
         return response;
     }
@@ -125,10 +124,9 @@ const getAverageWeatherSixteenDays = async (city) => {
             sixteenDayAvgTemp: getAverageSixteenTemperatures(data.data),
             city_name:data.city_name ,
             lon:data.lon ,
-            timezone:data.timezone ,
             lat:data.lat ,
-            country_code:data.country_code ,
-            state_code:data.state_code
+            timezone:data.timezone ,            
+            country_code:data.country_code
         }
         return response;
     } catch (err) {
