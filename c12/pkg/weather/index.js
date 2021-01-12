@@ -1,8 +1,11 @@
 const fetch = require('node-fetch');
+const cfg = require('./../config');
 
-const API_KEY = '582547fc77341a12028fa21f33c3cfdf';
 const UNITS = 'metric';
-const API_ENDPOINT = 'https://api.openweathermap.org/data/2.5/weather';
+const OPW_ENDPOINT = cfg.get('open-weather').api_endpoint;
+const OPW_API_KEY = cfg.get('open-weather').api_key;
+const WB_ENDPOINT = cfg.get('weather-bit').api_endpoint;
+const WB_API_KEY = cfg.get('weather-bit').api_key
 
 const cityMaps = {
     'sk': 'skopje',
@@ -26,6 +29,7 @@ const cityMapsCord = {
 
 let cache = {};
 let sevenDayCache = {};
+let sixteenDayCache = {};
 
 const getCityWeather = async (city) => {
     city = cityMaps[city.toLowerCase()];
@@ -33,8 +37,7 @@ const getCityWeather = async (city) => {
     if (cache[city] && (new Date().getTime()) - cache[city].timestamp < 60 * 1000) {
         return cache[city].data;
     }
-    let url = `${API_ENDPOINT}?appid=${API_KEY}&units=${UNITS}&q=${city}`;
-
+    let url = `${OPW_ENDPOINT}?appid=${OPW_API_KEY}&units=${UNITS}&q=${city}`;
     try {
         let data = await fetch(url);
         data = await data.json();
@@ -62,6 +65,15 @@ const getAverageTemperatures = (array) => {
     return result;
 };
 
+const getAverageSixteenTemperatures = (array) => {
+    let sixteenDayAvgTemp = 0;
+    for (let day in array) {
+        sixteenDayAvgTemp = sixteenDayAvgTemp + array[day].temp;
+    }
+    return sixteenDayAvgTemp = sixteenDayAvgTemp / 16;
+};
+
+
 const getAverageWeather = async (city) => {
     let cords = cityMapsCord[city.toLowerCase()];
     city = cityMaps[city.toLowerCase()];
@@ -69,7 +81,7 @@ const getAverageWeather = async (city) => {
         let avg = getAverageTemperatures(sevenDayCache[city].data.daily);
         return avg;
     }
-    let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${cords.lat}&lon=${cords.lon}&units=metric&exclude=hourly,minutely,current,alerts&appid=${API_KEY}`
+    let url = `https://api.openweathermap.org/data/2.5/onecall?lat=${cords.lat}&lon=${cords.lon}&units=metric&exclude=hourly,minutely,current,alerts&appid=${cfg.get('open-weather').api_endpoint}`
     try {
         let data = await fetch(url);
         data = await data.json();
@@ -83,9 +95,49 @@ const getAverageWeather = async (city) => {
     } catch (err) {
         console.log(err);
     }
-}
+};
+
+const getAverageWeatherSixteenDays = async (city) => {
+    city = cityMaps[city.toLowerCase()];
+    if (sixteenDayCache[city] && (new Date().getTime()) - sixteenDayCache[city].timestamp < 60 * 1000) {
+        let data = sixteenDayCache[city].data;
+        let response = {
+            sixteenDayAvgTemp: getAverageSixteenTemperatures(data.data),
+            city_name:data.city_name ,
+            lon:data.lon ,
+            timezone:data.timezone ,
+            lat:data.lat ,
+            country_code:data.country_code ,
+            state_code:data.state_code
+        }
+        return response;
+    }
+    let url = `${WB_ENDPOINT}?city=${city}&key=${WB_API_KEY}`
+    try {
+        let data = await fetch(url);
+        data = await data.json();
+
+        sixteenDayCache[city] = {
+            timestamp: new Date().getTime(),
+            data
+        };
+        let response = {
+            sixteenDayAvgTemp: getAverageSixteenTemperatures(data.data),
+            city_name:data.city_name ,
+            lon:data.lon ,
+            timezone:data.timezone ,
+            lat:data.lat ,
+            country_code:data.country_code ,
+            state_code:data.state_code
+        }
+        return response;
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 module.exports = {
     getCityWeather,
-    getAverageWeather
-}
+    getAverageWeather,
+    getAverageWeatherSixteenDays
+};

@@ -10,7 +10,13 @@ const getAverageWeather = async(req, res) => {
     res.status(200).send(data);
 };
 
+const getAverageWeatherSixteenDays = async(req, res) => {
+    let data = await weather.getAverageWeatherSixteenDays(req.params.city)
+    res.status(200).send(data);
+};
+
 module.exports = {
     getWeather,
-    getAverageWeather
+    getAverageWeather,
+    getAverageWeatherSixteenDays
 };
