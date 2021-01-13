@@ -4,14 +4,14 @@
         "jwt_key": "TaJn4"
     },
     "db": {
-        "username": "borce_ss",
-        "password": "boro!759",
-        "host": "cluster0.vw2pn.mongodb.net",
+        "username": "",
+        "password": "",
+        "host": "",
         "dbname": "users"
     },
     "mailer": {
-        "key": "8c7500e2000e3023e4f79a5cc066e1a8-28d78af2-814e5497",
-        "domain": "sandboxb3f32e373ef74e3c9635b5c53001fbed.mailgun.org"
+        "key": "",
+        "domain": ""
     },
     "email": {
         "api_key": "key",
