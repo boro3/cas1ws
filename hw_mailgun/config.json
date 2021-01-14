@@ -1,0 +1,17 @@
+{
+    "server": {
+        "port": 8080,
+        "jwt_key": "",
+        "jwt_reset_key": ""
+    },
+    "mailer": {
+        "key": "",
+        "domain": ""
+    },
+    "db": {
+        "username": "",
+        "password": "",
+        "host": "",
+        "dbname": ""
+    }
+}
